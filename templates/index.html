@@ -1,1 +1,22 @@
-hello world
+<html>
+    <body onload="javascript:mc_init()">
+        <button onmousedown='move(this)' onmouseup='stop()' id='FWD'>FORWARD</button>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.5/socket.io.js" integrity="sha512-luMnTJZ7oEchNDZAtQhgjomP1eZefnl82ruTH/3Oj/Yu5qYtwL7+dVRccACS/Snp1lFXq188XFipHKYE75IaQQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <script>
+            function mc_init(){
+                socket = io.connect('http://'+document.domain+':'+location.port);
+                socket.on('rsp', function(data){
+                    console.log(data['status']);
+                });
+            }
+            function move(btn){
+                socket.emit('req', {'direction': btn.id, 'speed': '100'});
+                return false;
+            }
+            function stop(){
+                socket.emit('req', {'direction': 'STOP', 'speed': '0'});
+                return false;
+            }
+        </script>
+    </body>
+</html>
