@@ -1,8 +1,9 @@
-#webcam-feed {
+#video-container {
     position: fixed;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%);
+    /* also scale */
+    transform: translate(-50%, -50%) scale(2.5);
     z-index: -1;
 }
 body {

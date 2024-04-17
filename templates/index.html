@@ -10,7 +10,12 @@
 
 
         <div id="joystick-R"></div>
+        <div id="joystick-L"></div>
 
+
+        <div id="video-container">
+            <img src="http://100.37.240.26:93/nphMotionJpeg?Resolution=320x240&Quality=Standard" alt="Live Video Feed">
+        </div>
         
         <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.5/socket.io.js" integrity="sha512-luMnTJZ7oEchNDZAtQhgjomP1eZefnl82ruTH/3Oj/Yu5qYtwL7+dVRccACS/Snp1lFXq188XFipHKYE75IaQQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/nipplejs/0.10.2/nipplejs.js" integrity="sha512-WkQoRWCoNX6HLaYdCCKUS3QfVk6Yk3U7gTgX22yil7QY91pFsBFzTVjhdbXoOLayLHeTre5sZNchk/5SO7FNdg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -38,9 +43,16 @@
                 color: 'white',
                 size: 120,
             });
+            var joyL = nipplejs.create({
+                zone: document.getElementById('joystick-L'),
+                mode: 'static',
+                position: {left: '10rem', bottom: '10rem'},
+                color: 'white',
+                size: 120,
+            });
 
             joyR.on('move', function (evt, data){
-                socket.emit('req', {'joy_x': data.vector.x*255 / 2 + 127.5, 'joy_y': data.vector.y});
+                socket.emit('req', {'joy_x': data.vector.x*-255 / 2 + 127.5, 'joy_y': data.vector.y});
             });
             joyR.on('end', function (evt){
                 socket.emit('req', {'stop': true})
