@@ -42,6 +42,9 @@
             joyR.on('move', function (evt, data){
                 socket.emit('req', {'joy_x': data.vector.x*255 / 2 + 127.5, 'joy_y': data.vector.y});
             });
+            joyR.on('end', function (evt){
+                socket.emit('req', {'stop': true})
+            });
         </script>
     </body>
 </html>

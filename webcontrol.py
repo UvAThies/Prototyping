@@ -17,6 +17,12 @@ def handle_index():
 
 @socketio.on("req")
 def handle_req(data):
+    if "stop" in data:
+        print("Received request: stop")
+        controls.stop()
+        emit("rsp", {"status": "OK"})
+        return
+
     joy_x = data["joy_x"]
     joy_y = data["joy_y"]
 
