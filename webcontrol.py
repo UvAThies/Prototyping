@@ -4,11 +4,12 @@
 from flask import Flask, render_template
 from flask_socketio import SocketIO, emit
 from time import sleep
+import controls
 
 app = Flask(__name__)
 socketio = SocketIO(app)
 
-    
+
 @app.route("/")
 def handle_index():
     return render_template("index.html")
@@ -16,13 +17,12 @@ def handle_index():
 
 @socketio.on("req")
 def handle_req(data):
-    direction = data["direction"]
-    if direction != "STOP":
-        spd = int(data["speed"])
-        if direction == "FWD":
-            print("Moving forward at speed: " + str(spd))
-    else:
-        print("Stopping")
+    joy_x = data["joy_x"]
+    joy_y = data["joy_y"]
+
+    print(f"Received request: joy_x={joy_x}, joy_y={joy_y}")
+    controls.motor_instructions(joy_y, joy_x)
+
     emit("rsp", {"status": "OK"})
 
 

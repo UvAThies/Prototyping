@@ -38,6 +38,10 @@
                 color: 'white',
                 size: 120,
             });
+
+            joyR.on('move', function (evt, data){
+                socket.emit('req', {'joy_x': data.vector.x*255 / 2 + 127.5, 'joy_y': data.vector.y});
+            });
         </script>
     </body>
 </html>
