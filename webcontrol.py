@@ -8,7 +8,7 @@ from time import sleep
 app = Flask(__name__)
 socketio = SocketIO(app)
 
-
+    
 @app.route("/")
 def handle_index():
     return render_template("index.html")

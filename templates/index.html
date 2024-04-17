@@ -1,26 +1,16 @@
-<html>
+<html lang="en">
     <head>
-        <style>
-            #webcam-feed {
-                position: fixed;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                z-index: -1;
-            }
-            body {
-                background-color: #191919;
-            }
-        </style>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Rescue Turtle Control</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     </head>
     <body onload="javascript:mc_init()">
-        <button onmousedown='move(this)' onmouseup='stop()' id='FWD'>FORWARD</button>
+        <a class="action-button shadow animate blue unselectable" onmousedown='move(this)' onmouseup='stop()' id="FWD">FORWARD</a>
+
 
         <div id="joystick-R"></div>
-        <div id="joystick-L"></div>
-        <div id="webcam-feed">
-            <img src="http://192.168.178.84/webcam/?action=stream&amp;cacheBust=1713301125083">
-        </div>
+
         
         <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.5/socket.io.js" integrity="sha512-luMnTJZ7oEchNDZAtQhgjomP1eZefnl82ruTH/3Oj/Yu5qYtwL7+dVRccACS/Snp1lFXq188XFipHKYE75IaQQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/nipplejs/0.10.2/nipplejs.js" integrity="sha512-WkQoRWCoNX6HLaYdCCKUS3QfVk6Yk3U7gTgX22yil7QY91pFsBFzTVjhdbXoOLayLHeTre5sZNchk/5SO7FNdg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -45,13 +35,6 @@
                 zone: document.getElementById('joystick-R'),
                 mode: 'static',
                 position: {right: '10rem', bottom: '10rem'},
-                color: 'white',
-                size: 120,
-            });
-            var joyL = nipplejs.create({
-                zone: document.getElementById('joystick-L'),
-                mode: 'static',
-                position: {left: '10rem', bottom: '10rem'},
                 color: 'white',
                 size: 120,
             });
