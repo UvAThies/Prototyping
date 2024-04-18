@@ -1,16 +1,26 @@
 # Tijn Schuitevoerder 2024
 
+import sys
 from flask import Flask, render_template
 from flask_socketio import SocketIO, emit
-from controls import MotorControl
+
+if "RPi.GPIO" not in sys.modules:
+    print("RPi.GPIO not found, running in debug mode")
+    from controller_sim import MotorControlSim
+
+    controller = MotorControlSim()
+
+else:
+    # connect to the motor controller
+    from controls import MotorControl
+
+    controller = MotorControl()
+
+controller.setup_sig_handler()
 
 # intialize the Flask app
 app = Flask(__name__)
 socketio = SocketIO(app)
-
-# connect to the motor controller
-controller = MotorControl()
-controller.setup_sig_handler()
 
 
 @app.route("/")
@@ -24,13 +34,18 @@ def handle_req(data):
         emit("rsp", {"status": "Stopping"})
         controller.stop()
         return
+    if data['sound'] == 'PLAY':
+        controller.play_sound()
+    elif data['sound'] == 'STOP':
+        controller.stop_sound()
 
-    joy_x = data["joy_x"]
-    joy_y = data["joy_y"]
+    if "joy_x" in data and "joy_y" in data:
+        joy_x = data["joy_x"]
+        joy_y = data["joy_y"]
 
-    # print(f"Received request: joy_x={joy_x}, joy_y={joy_y}")
-    # emit("rsp", {"status": "OK"})
-    controller.motor_instructions(joy_y, joy_x)
+        # print(f"Received request: joy_x={joy_x}, joy_y={joy_y}")
+        # emit("rsp", {"status": "OK"})
+        controller.motor_instructions(joy_y, joy_x)
 
 
 @socketio.on("connect")
