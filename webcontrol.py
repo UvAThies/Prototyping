@@ -1,13 +1,16 @@
 # Tijn Schuitevoerder 2024
 
-# Use socketio for real-time communication using websockets
 from flask import Flask, render_template
 from flask_socketio import SocketIO, emit
-from time import sleep
-import controls
+from controls import MotorControl
 
+# intialize the Flask app
 app = Flask(__name__)
 socketio = SocketIO(app)
+
+# connect to the motor controller
+controller = MotorControl()
+controller.setup_sig_handler()
 
 
 @app.route("/")
@@ -18,18 +21,16 @@ def handle_index():
 @socketio.on("req")
 def handle_req(data):
     if "stop" in data:
-        print("Received request: stop")
-        controls.stop()
-        emit("rsp", {"status": "OK"})
+        emit("rsp", {"status": "Stopping"})
+        controller.stop()
         return
 
     joy_x = data["joy_x"]
     joy_y = data["joy_y"]
 
-    print(f"Received request: joy_x={joy_x}, joy_y={joy_y}")
-    controls.motor_instructions(joy_y, joy_x)
-
-    emit("rsp", {"status": "OK"})
+    # print(f"Received request: joy_x={joy_x}, joy_y={joy_y}")
+    # emit("rsp", {"status": "OK"})
+    controller.motor_instructions(joy_y, joy_x)
 
 
 @socketio.on("connect")
