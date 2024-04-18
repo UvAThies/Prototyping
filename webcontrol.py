@@ -34,10 +34,11 @@ def handle_req(data):
         emit("rsp", {"status": "Stopping"})
         controller.stop()
         return
-    if data['sound'] == 'PLAY':
-        controller.play_sound()
-    elif data['sound'] == 'STOP':
-        controller.stop_sound()
+    if "sound" in data:
+        if data['sound'] == 'PLAY':
+            controller.play_sound()
+        elif data['sound'] == 'STOP':
+            controller.stop_sound()
 
     if "joy_x" in data and "joy_y" in data:
         joy_x = data["joy_x"]
