@@ -115,3 +115,18 @@ class MotorControl:
     def setup_sig_handler(self):
         signal.signal(signal.SIGINT, self.signal_handler)
         signal.signal(signal.SIGTERM, self.signal_handler)
+
+
+class ServoControl:
+    def __init__(self):
+        self.servoPIN = 14
+        GPIO.setmode(GPIO.BCM)
+        GPIO.setup(self.servoPIN, GPIO.OUT)
+        self.servo = GPIO.PWM(self.servoPIN, 50)
+        self.servo.start(0)
+
+    def move(self, angle):
+        # map angle from 0-180 to 2-13
+        duty = angle / 18 + 2
+        self.servo.ChangeDutyCycle(duty)
+        
