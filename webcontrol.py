@@ -4,18 +4,12 @@ import sys
 from flask import Flask, render_template
 from flask_socketio import SocketIO, emit
 
-if "RPi.GPIO" not in sys.modules:
-    print("RPi.GPIO not found, running in debug mode")
-    from controller_sim import MotorControlSim
+from controls import MotorControl
 
-    controller = MotorControlSim()
+# from controller_sim import MotorControlSim
+# controller = MotorControlSim()
 
-else:
-    # connect to the motor controller
-    from controls import MotorControl
-
-    controller = MotorControl()
-
+controller = MotorControl()
 controller.setup_sig_handler()
 
 # intialize the Flask app
@@ -35,9 +29,9 @@ def handle_req(data):
         controller.stop()
         return
     if "sound" in data:
-        if data['sound'] == 'PLAY':
+        if data["sound"] == "PLAY":
             controller.play_sound()
-        elif data['sound'] == 'STOP':
+        elif data["sound"] == "STOP":
             controller.stop_sound()
 
     if "joy_x" in data and "joy_y" in data:
