@@ -66,6 +66,11 @@
             joyR.on('end', function (evt){
                 socket.emit('req', {'stop': true})
             });
+
+            joyL.on('move', function (evt, data){
+                console.log(data.angle.degree);
+                socket.emit('servo', {'angle': data.angle.degree});
+            });
         </script>
     </body>
 </html>
