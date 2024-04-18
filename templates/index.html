@@ -56,7 +56,6 @@
                 mode: 'static',
                 position: {left: '10rem', bottom: '10rem'},
                 color: 'white',
-                lockX: true,
                 size: 120,
             });
 
@@ -68,7 +67,6 @@
             });
 
             joyL.on('move', function (evt, data){
-                console.log(data.angle.degree);
                 socket.emit('servo', {'angle': data.angle.degree});
             });
         </script>
