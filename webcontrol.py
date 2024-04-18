@@ -4,12 +4,13 @@ import sys
 from flask import Flask, render_template
 from flask_socketio import SocketIO, emit
 
-from controls import MotorControl
+from controls import MotorControl, ServoControl
 
 # from controller_sim import MotorControlSim
 # controller = MotorControlSim()
 
 controller = MotorControl()
+servo_controller = ServoControl()
 controller.setup_sig_handler()
 
 # intialize the Flask app
@@ -46,6 +47,11 @@ def handle_req(data):
         # emit("rsp", {"status": "OK"})
         controller.motor_instructions(joy_y, joy_x)
 
+@socketio.on("servo")
+def handle_servo(data):
+    if "angle" in data:
+        servo = data["angle"]
+        servo_controller.move(servo)
 
 @socketio.on("connect")
 def handle_connect():

@@ -1,3 +1,6 @@
+# Code from old groups
+# Modified by: Thies Nieborg & Tijn Schuitevoerder
+
 import RPi.GPIO as GPIO
 import signal
 import sys
@@ -33,7 +36,7 @@ class MotorControl:
 
     def play_sound(self):
         print("Playing sound")
-    
+
     def stop_sound(self):
         print("Stopping sound")
 
@@ -50,7 +53,6 @@ class MotorControl:
         GPIO.output(self.M4, B2)
 
     def forward(self):
-        # TODO: Switch A1 and A2.
         self.set_motor(1, 0, 0, 1)
 
     def stop(self):
@@ -113,3 +115,18 @@ class MotorControl:
     def setup_sig_handler(self):
         signal.signal(signal.SIGINT, self.signal_handler)
         signal.signal(signal.SIGTERM, self.signal_handler)
+
+
+class ServoControl:
+    def __init__(self):
+        self.servoPIN = 14
+        GPIO.setmode(GPIO.BCM)
+        GPIO.setup(self.servoPIN, GPIO.OUT)
+        self.servo = GPIO.PWM(self.servoPIN, 50)
+        self.servo.start(0)
+
+    def move(self, angle):
+        # map angle from 0-180 to 2-13
+        duty = angle / 18 + 2
+        self.servo.ChangeDutyCycle(duty)
+        
