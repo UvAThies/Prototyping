@@ -1,3 +1,6 @@
+# Code from old groups
+# Modified by: Thies Nieborg & Tijn Schuitevoerder
+
 import RPi.GPIO as GPIO
 import signal
 import sys
@@ -33,7 +36,7 @@ class MotorControl:
 
     def play_sound(self):
         print("Playing sound")
-    
+
     def stop_sound(self):
         print("Stopping sound")
 
@@ -50,7 +53,6 @@ class MotorControl:
         GPIO.output(self.M4, B2)
 
     def forward(self):
-        # TODO: Switch A1 and A2.
         self.set_motor(1, 0, 0, 1)
 
     def stop(self):
