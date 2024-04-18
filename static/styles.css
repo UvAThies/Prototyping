@@ -3,7 +3,7 @@
     top: 50%;
     left: 50%;
     /* also scale */
-    transform: translate(-50%, -50%) scale(2.5);
+    transform: translate(-50%, -50%) scale(1.5);
     z-index: -1;
 }
 body {
