@@ -31,6 +31,12 @@ class MotorControl:
         self.motor_1_PWM.start(100)
         self.motor_2_PWM.start(100)
 
+    def play_sound(self):
+        print("Playing sound")
+    
+    def stop_sound(self):
+        print("Stopping sound")
+
     # https://www.waveshare.com/wiki/RPi_Motor_Driver_Board
     # Motor A: PWA1, PWA2.
     # Motor B: PWB1, PWB2.
@@ -45,10 +51,7 @@ class MotorControl:
 
     def forward(self):
         # TODO: Switch A1 and A2.
-        GPIO.output(self.M1, 1)
-        GPIO.output(self.M2, 0)
-        GPIO.output(self.M3, 0)
-        GPIO.output(self.M4, 1)
+        self.set_motor(1, 0, 0, 1)
 
     def stop(self):
         self.set_motor(0, 0, 0, 0)

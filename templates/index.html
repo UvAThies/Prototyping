@@ -6,7 +6,7 @@
         <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     </head>
     <body onload="javascript:mc_init()">
-        <a class="action-button shadow animate blue unselectable" onmousedown='move(this)' onmouseup='stop()' id="FWD">FORWARD</a>
+        <a class="action-button shadow animate blue unselectable" onmousedown='playsound()' onmouseup='stopsound()'>Play Sound</a>
 
 
         <div id="joystick-R"></div>
@@ -34,6 +34,14 @@
                 socket.emit('req', {'direction': 'STOP', 'speed': '0'});
                 return false;
             }
+            function playsound(){
+                socket.emit('req', {'sound': 'PLAY'});
+                return false;
+            }
+            function stopsound(){
+                socket.emit('req', {'sound': 'STOP'});
+                return false;
+            }
         </script>
         <script>
             var joyR = nipplejs.create({
@@ -48,6 +56,7 @@
                 mode: 'static',
                 position: {left: '10rem', bottom: '10rem'},
                 color: 'white',
+                lockX: true,
                 size: 120,
             });
 
