@@ -39,19 +39,17 @@ def handle_req(data):
         joy_x = data["joy_x"]
         joy_y = data["joy_y"]
 
-        if joy_x == 0 and joy_y == 0:
-            controller.stop()
-            return
-
         # print(f"Received request: joy_x={joy_x}, joy_y={joy_y}")
         # emit("rsp", {"status": "OK"})
-        controller.motor_instructions(joy_y, joy_x)
+        controller.motor_instructions_new(joy_y, joy_x)
+
 
 @socketio.on("servo")
 def handle_servo(data):
     if "angle" in data:
         servo = data["angle"]
         servo_controller.move(servo)
+
 
 @socketio.on("connect")
 def handle_connect():

@@ -61,6 +61,27 @@ class MotorControl:
     def reverse(self):
         self.set_motor(0, 1, 1, 0)
 
+    def set_motor_new(self, left_dir, right_dir):
+        if left_dir == 1 and right_dir == 1:
+            # both forwards
+            self.set_motor(1, 0, 0, 1)
+
+        if left_dir == -1 and right_dir == -1:
+            # both backwards
+            self.set_motor(0, 1, 1, 0)
+
+        if left_dir == 1 and right_dir == -1:
+            # left forward, right backward
+            self.set_motor(1, 0, 1, 0)  # wellicht omkeren
+
+        if left_dir == -1 and right_dir == 1:
+            # left backward, right forward
+            self.set_motor(0, 1, 0, 1)  # wellicht omkeren
+
+        if left_dir == 0 and right_dir == 0:
+            # both stop
+            self.set_motor(0, 0, 0, 0)
+
     # motor instructions, expects values:
     # Trigger_inp: waarde tussen -1 en 1 die aangeeft hoeveel gas wordt gegeven. 1=vol gas vooruit, -1=vol gas achteruit, 0=neutraal
     # Joy_inp: waarde tussen 0 en 255 die aangeeft hoeveel naar links of rechts wordt gestuurd. 0=volledig naar links, 255=volledig naar rechts, 127=neutraal
@@ -107,6 +128,29 @@ class MotorControl:
                 self.motor_2_PWM.ChangeDutyCycle(steer_value_1_scaled)
                 self.reverse()
 
+    def motor_instructions_new(self, joy_x, joy_y):
+        left_track = (joy_x + joy_y) * 255
+        right_track = (joy_x - joy_y) * 255
+
+        if left_track > 0:
+            left_dir = 1
+        elif left_track < 0:
+            left_dir = -1
+        else:
+            left_dir = 0
+
+        if right_track > 0:
+            right_dir = 1
+        elif right_track < 0:
+            right_dir = -1
+        else:
+            right_dir = 0
+
+        self.set_motor_new(left_dir, right_dir)
+
+        self.motor_1_PWM.ChangeDutyCycle(left_track)
+        self.motor_2_PWM.ChangeDutyCycle(right_track)
+
     def signal_handler(self, sig, frame):
         self.stop()
         GPIO.cleanup()
@@ -129,4 +173,3 @@ class ServoControl:
         # map angle from 0-180 to 2-13
         duty = angle / 18 + 2
         self.servo.ChangeDutyCycle(duty)
-        
