@@ -1,6 +1,9 @@
-import controls
+from controls import MotorControl
 import time
+
+
 def main():
+    controls = MotorControl()
 
     controls.stop()
 
