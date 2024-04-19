@@ -151,8 +151,8 @@ class MotorControl:
         self.set_motor_new(left_dir, right_dir)
 
         if left_speed <= 100 and left_speed <= 100 and left_speed >= 0 and right_speed >= 0:
-            self.motor_1_PWM.ChangeDutyCycle(left_track)
-            self.motor_2_PWM.ChangeDutyCycle(right_track)
+            self.motor_1_PWM.ChangeDutyCycle(left_speed)
+            self.motor_2_PWM.ChangeDutyCycle(right_speed)
 
     def signal_handler(self, sig, frame):
         self.stop()
