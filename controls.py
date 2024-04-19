@@ -129,8 +129,8 @@ class MotorControl:
                 self.reverse()
 
     def motor_instructions_new(self, joy_x, joy_y):
-        left_track = (joy_x + joy_y) * 255
-        right_track = (joy_x - joy_y) * 255
+        left_track = (joy_x + joy_y) * 100
+        right_track = (joy_x - joy_y) * 100
 
         if left_track > 0:
             left_dir = 1
