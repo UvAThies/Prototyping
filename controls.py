@@ -129,8 +129,8 @@ class MotorControl:
                 self.reverse()
 
     def motor_instructions_new(self, joy_x, joy_y):
-        left_track = (joy_x + joy_y) * 100
-        right_track = (joy_x - joy_y) * 100
+        left_track = (joy_x + joy_y) / 2**.5
+        right_track = (joy_x - joy_y) / 2**.5
 
         if left_track > 0:
             left_dir = 1
@@ -148,8 +148,9 @@ class MotorControl:
 
         self.set_motor_new(left_dir, right_dir)
 
-        self.motor_1_PWM.ChangeDutyCycle(left_track)
-        self.motor_2_PWM.ChangeDutyCycle(right_track)
+        if abs(left_track) <= 1 and abs(right_track) <= 1:
+            self.motor_1_PWM.ChangeDutyCycle(left_track)
+            self.motor_2_PWM.ChangeDutyCycle(right_track)
 
     def signal_handler(self, sig, frame):
         self.stop()
