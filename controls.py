@@ -129,6 +129,8 @@ class MotorControl:
                 self.reverse()
 
     def motor_instructions_new(self, joy_x, joy_y):
+
+        # opposite track movement on steering, scaled 
         left_track = (joy_x + joy_y) * 100 / 2**0.5
         right_track = (joy_x - joy_y) * 100 / 2**0.5
 
@@ -172,7 +174,7 @@ class ServoControl:
         self.servo = GPIO.PWM(self.servoPIN, 50)
         self.servo.start(0)
 
-    def move(self, angle):
+    def move(self, servo_x):
         # map angle from 0-180 to 2-13
-        duty = angle / 18 + 2
+        duty = servo_x / 18 + 2
         self.servo.ChangeDutyCycle(duty)

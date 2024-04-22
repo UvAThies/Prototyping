@@ -67,7 +67,7 @@
             });
 
             joyL.on('move', function (evt, data){
-                socket.emit('servo', {'angle': data.angle.degree});
+                socket.emit('servo', {'servo_x': data.vector.x});
             });
         </script>
     </body>
