@@ -2,6 +2,7 @@
 # Modified by: Thies Nieborg & Tijn Schuitevoerder
 
 import RPi.GPIO as GPIO
+from playsound import playsound
 import signal
 import sys
 
@@ -36,8 +37,10 @@ class MotorControl:
 
     def play_sound(self):
         print("Playing sound")
+        playsound("./sounds/horn.mp3")
 
     def stop_sound(self):
+        # doet niks lol
         print("Stopping sound")
 
     # https://www.waveshare.com/wiki/RPi_Motor_Driver_Board
@@ -150,7 +153,12 @@ class MotorControl:
         right_speed = abs(right_track)
         self.set_motor_new(left_dir, right_dir)
 
-        if left_speed <= 100 and left_speed <= 100 and left_speed >= 0 and right_speed >= 0:
+        if (
+            left_speed <= 100
+            and left_speed <= 100
+            and left_speed >= 0
+            and right_speed >= 0
+        ):
             self.motor_1_PWM.ChangeDutyCycle(left_speed)
             self.motor_2_PWM.ChangeDutyCycle(right_speed)
 

@@ -31,6 +31,7 @@ packaging=23.2=py310haa95532_0
 parso=0.8.3=pyhd3eb1b0_0
 pip=23.3.1=py310haa95532_0
 platformdirs=3.10.0=py310haa95532_0
+playsound=1.3.0=pyhd8ed1ab_0
 prompt-toolkit=3.0.43=py310haa95532_0
 prompt_toolkit=3.0.43=hd3eb1b0_0
 psutil=5.9.0=py310h2bbff1b_0
