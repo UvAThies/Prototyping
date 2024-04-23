@@ -31,8 +31,8 @@ class MotorControl:
 
         self.motor_1_PWM = GPIO.PWM(PWMA, 50)
         self.motor_2_PWM = GPIO.PWM(PWMB, 50)
-        self.motor_1_PWM.start(100)
-        self.motor_2_PWM.start(100)
+        # self.motor_1_PWM.start(100)
+        # self.motor_2_PWM.start(100)
 
     def play_sound(self):
         print("Playing sound")
