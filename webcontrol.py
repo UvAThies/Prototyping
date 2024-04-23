@@ -49,6 +49,8 @@ def handle_servo(data):
     if "servo_x" in data:
         servo = data["servo_x"]
         servo_controller.move(servo)
+    if "stop" in data:
+        servo_controller.stop()
 
 
 @socketio.on("connect")

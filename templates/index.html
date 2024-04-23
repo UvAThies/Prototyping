@@ -57,6 +57,7 @@
                 position: {left: '10rem', bottom: '10rem'},
                 color: 'white',
                 size: 120,
+                lockX: true,
             });
 
             joyR.on('move', function (evt, data){
@@ -68,6 +69,9 @@
 
             joyL.on('move', function (evt, data){
                 socket.emit('servo', {'servo_x': data.vector.x});
+            });
+            joyL.on('end', function (evt){
+                socket.emit('servo', {'stop': true})
             });
         </script>
     </body>

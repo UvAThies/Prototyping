@@ -178,3 +178,6 @@ class ServoControl:
         # map angle from 0-180 to 2-13
         duty = servo_x / 18 + 2
         self.servo.ChangeDutyCycle(duty)
+    
+    def stop(self):
+        self.servo.ChangeDutyCycle(0)
