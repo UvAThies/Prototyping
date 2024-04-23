@@ -187,3 +187,4 @@ class ServoControl:
     def stop(self):
         print("Stopping servo")  # tijdelijk
         self.servo.ChangeDutyCycle(0)
+        # self.servo.stop()
