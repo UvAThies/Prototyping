@@ -177,12 +177,12 @@ class ServoControl:
         GPIO.setmode(GPIO.BCM)
         GPIO.setup(self.servoPIN, GPIO.OUT)
         self.servo = GPIO.PWM(self.servoPIN, 50)
-        self.servo.start(6.25)
+        self.servo.start(7.5)
 
     def move(self, servo_x):
-        # map angle from 0-180 to 2-13
-        duty = servo_x
-        print(servo_x)
+        # map angle from -1 1 to 2.5-12.5
+        duty = servo_x * 5 + 7.5
+        self.servo.ChangeDutyCycle(duty)
 
     def stop(self):
         print("Stopping servo")  # tijdelijk
