@@ -47,9 +47,11 @@ def handle_req(data):
 
 @socketio.on("servo")
 def handle_servo(data):
-    if "angle" in data:
-        servo = data["angle"]
+    if "servo_x" in data:
+        servo = data["servo_x"]
         servo_controller.move(servo)
+    if "stop" in data:
+        servo_controller.stop()
 
 
 @socketio.on("connect")

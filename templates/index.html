@@ -90,14 +90,6 @@
                 getGPSData();
             }
 
-            function move(btn){
-                socket.emit('req', {'direction': btn.id, 'speed': '100'});
-                return false;
-            }
-            function stop(){
-                socket.emit('req', {'direction': 'STOP', 'speed': '0'});
-                return false;
-            }
             function playsound(){
                 socket.emit('req', {'sound': 'PLAY'});
                 return false;
@@ -120,7 +112,9 @@
                 mode: 'static',
                 position: {left: '10rem', bottom: '10rem'},
                 color: 'white',
-                size: 120,
+                size: 170,
+                lockX: true,
+                restJoystick: false,
             });
 
             joyR.on('move', function (evt, data){
@@ -131,7 +125,10 @@
             });
 
             joyL.on('move', function (evt, data){
-                socket.emit('servo', {'angle': data.angle.degree});
+                socket.emit('servo', {'servo_x': data.vector.x});
+            });
+            joyL.on('end', function (evt){
+                socket.emit('servo', {'stop': true})
             });
         </script>
     </body>
