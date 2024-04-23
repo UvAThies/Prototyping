@@ -132,8 +132,10 @@ class MotorControl:
                 self.reverse()
 
     def motor_instructions_new(self, joy_x, joy_y):
-        left_track = (joy_x + joy_y) * 100 / 2**0.5
-        right_track = (joy_x - joy_y) * 100 / 2**0.5
+
+        # opposite track movement on steering, scaled
+        left_track = (joy_x + joy_y * 0.5) * 100 / 2**0.5
+        right_track = (joy_x - joy_y * 0.5) * 100 / 2**0.5
 
         if left_track > 0:
             left_dir = 1
@@ -178,9 +180,15 @@ class ServoControl:
         GPIO.setmode(GPIO.BCM)
         GPIO.setup(self.servoPIN, GPIO.OUT)
         self.servo = GPIO.PWM(self.servoPIN, 50)
-        self.servo.start(0)
+        self.servo.start(7.5)
+        self.servo.ChangeDutyCycle(0)
 
-    def move(self, angle):
-        # map angle from 0-180 to 2-13
-        duty = angle / 18 + 2
+    def move(self, servo_x):
+        # map angle from -1 1 to 2.5-12.5
+        duty = servo_x * -5 + 7.5
         self.servo.ChangeDutyCycle(duty)
+
+    def stop(self):
+        print("Stopping servo")  # tijdelijk
+        self.servo.ChangeDutyCycle(0)
+        # self.servo.stop()
