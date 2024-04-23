@@ -130,9 +130,9 @@ class MotorControl:
 
     def motor_instructions_new(self, joy_x, joy_y):
 
-        # opposite track movement on steering, scaled 
-        left_track = (joy_x + joy_y) * 100 / 2**0.5
-        right_track = (joy_x - joy_y) * 100 / 2**0.5
+        # opposite track movement on steering, scaled
+        left_track = (joy_x + joy_y * 0.5) * 100 / 2**0.5
+        right_track = (joy_x - joy_y * 0.5) * 100 / 2**0.5
 
         if left_track > 0:
             left_dir = 1
@@ -152,7 +152,12 @@ class MotorControl:
         right_speed = abs(right_track)
         self.set_motor_new(left_dir, right_dir)
 
-        if left_speed <= 100 and left_speed <= 100 and left_speed >= 0 and right_speed >= 0:
+        if (
+            left_speed <= 100
+            and left_speed <= 100
+            and left_speed >= 0
+            and right_speed >= 0
+        ):
             self.motor_1_PWM.ChangeDutyCycle(left_speed)
             self.motor_2_PWM.ChangeDutyCycle(right_speed)
 
