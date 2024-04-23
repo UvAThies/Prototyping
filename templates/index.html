@@ -26,14 +26,7 @@
                     console.log(data['status']);
                 });
             }
-            function move(btn){
-                socket.emit('req', {'direction': btn.id, 'speed': '100'});
-                return false;
-            }
-            function stop(){
-                socket.emit('req', {'direction': 'STOP', 'speed': '0'});
-                return false;
-            }
+            
             function playsound(){
                 socket.emit('req', {'sound': 'PLAY'});
                 return false;

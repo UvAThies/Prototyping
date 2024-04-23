@@ -181,8 +181,9 @@ class ServoControl:
 
     def move(self, servo_x):
         # map angle from 0-180 to 2-13
-        duty = servo_x / 18 + 2
+        duty = servo_x
         self.servo.ChangeDutyCycle(duty)
-    
+
     def stop(self):
+        print("Stopping servo")  # tijdelijk
         self.servo.ChangeDutyCycle(0)
