@@ -87,7 +87,7 @@ def get_gps_data():
 
 
 @socketio.on("gps")
-def handle_gps(data):
+def handle_gps():
     gps_data = get_gps_data()
     print(gps_data)
     return gps_data
