@@ -7,7 +7,7 @@
     </head>
     <body onload="javascript:mc_init()">
         <a class="action-button shadow animate blue unselectable" onmousedown='playsound()' onmouseup='stopsound()'>Play Sound</a>
-
+<span id="gps">NO FIX</span>
 
         <div id="joystick-R"></div>
         <div id="joystick-L"></div>
@@ -25,6 +25,17 @@
                 socket.on('rsp', function(data){
                     console.log(data['status']);
                 });
+
+                while (true) {
+                    socket.emit('gps', (data) => {
+                        console.log('GPS ack');
+                        console.log(data);
+                        document.getElementById('gps').innerHTML = JSON.stringify(data);
+                        
+                    });
+                    sleep(5000);
+                }
+
             }
             function move(btn){
                 socket.emit('req', {'direction': btn.id, 'speed': '100'});
