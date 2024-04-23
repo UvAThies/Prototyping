@@ -26,17 +26,21 @@
                     console.log(data['status']);
                 });
 
-                while (true) {
-                    socket.emit('gps', (data) => {
-                        console.log('GPS ack');
-                        console.log(data);
-                        document.getElementById('gps').innerHTML = JSON.stringify(data);
-                        
-                    });
-                    sleep(5000);
-                }
-
+                startGPS();
             }
+
+            function getGPSData() {
+                socket.emit('gps', (data) => {
+                    console.log('GPS ack');
+                    console.log(data);
+                    document.getElementById('gps').innerHTML = JSON.stringify(data);
+                });
+            }
+
+            function startGPS(){
+                setInterval(getGPSData, 1000);
+            }
+
             function move(btn){
                 socket.emit('req', {'direction': btn.id, 'speed': '100'});
                 return false;
