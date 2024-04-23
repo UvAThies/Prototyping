@@ -4,10 +4,18 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Rescue Turtle Control</title>
         <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+        crossorigin=""/>
+        <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+        crossorigin=""></script>
     </head>
     <body onload="javascript:mc_init()">
         <a class="action-button shadow animate blue unselectable" onmousedown='playsound()' onmouseup='stopsound()'>Play Sound</a>
 
+        <span id="gps">NO FIX</span>
+        <div id="map"></div>
 
         <div id="joystick-R"></div>
         <div id="joystick-L"></div>
@@ -16,7 +24,6 @@
         <div id="video-container">
             <img src="http://turtle.local:8081">
         </div>
-        
         <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.5/socket.io.js" integrity="sha512-luMnTJZ7oEchNDZAtQhgjomP1eZefnl82ruTH/3Oj/Yu5qYtwL7+dVRccACS/Snp1lFXq188XFipHKYE75IaQQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/nipplejs/0.10.2/nipplejs.js" integrity="sha512-WkQoRWCoNX6HLaYdCCKUS3QfVk6Yk3U7gTgX22yil7QY91pFsBFzTVjhdbXoOLayLHeTre5sZNchk/5SO7FNdg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
         <script>
@@ -25,6 +32,62 @@
                 socket.on('rsp', function(data){
                     console.log(data['status']);
                 });
+
+                startGPS();
+            }
+
+            function getGPSData() {
+                const modeMapping = {
+                    0: "NO FIX",
+                    1: "1 Satellite",
+                    2: "2d FIX",
+                    3: "3d FIX",
+                }
+
+                socket.emit('gps', (data) => {
+                    console.log('GPS ack');
+                    console.log(data);
+
+                    document.getElementById('gps').innerHTML = `Mode: ${modeMapping[data.mode]}`;
+
+                    if (typeof marker !== 'undefined') {
+                        map.removeLayer(marker);
+                    }
+
+                    if (data.mode < 2) {
+                        return;
+                    }
+                    const {lat, lon, error} = data;
+
+                    marker = L.marker([lat, lon]).addTo(map);
+
+                    const {x, y} = error;
+                    if (typeof circle !== 'undefined') {
+                        map.removeLayer(circle);
+                    }
+                    circle = L.circle([lat, lon], {
+                        color: 'red',
+                        fillColor: '#f03',
+                        fillOpacity: 0.5,
+                        radius: Math.sqrt(x**2 + y**2) * 1000
+                    }).addTo(map);
+
+                    // Center around the new position.
+                    map.panTo([lat, lon]);
+                });
+            }
+
+            function startGPS(){
+                // Center around Amsterdam.
+                map = L.map('map').setView([52.37, 4.89], 13);
+
+                L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    maxZoom: 19,
+                    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+                }).addTo(map);
+
+                setInterval(getGPSData, 5000);
+                getGPSData();
             }
 
             function playsound(){

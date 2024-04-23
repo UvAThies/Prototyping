@@ -5,13 +5,14 @@ from flask import Flask, render_template
 from flask_socketio import SocketIO, emit
 
 from controls import MotorControl, ServoControl
+import gpsd
 
-# from controller_sim import MotorControlSim
-# controller = MotorControlSim()
 
+gpsd.connect()
 controller = MotorControl()
 servo_controller = ServoControl()
 controller.setup_sig_handler()
+
 
 # intialize the Flask app
 app = Flask(__name__)
@@ -62,6 +63,46 @@ def handle_connect():
 @socketio.on("disconnect")
 def handle_disconnect():
     print("Client disconnected")
+
+
+# Use this function to get the current GPS data
+def get_gps_data():
+    current = gpsd.get_current()
+    # return {
+    #     "lat": 52.3553194,
+    #     "lon": 4.9571569,
+    #     "hspeed": 0,
+    #     "track": 0,
+    #     "mode": 3,
+    #     "time": "2024-01-01T00:00:00.000Z",
+    #     "error": {
+    #         "x": 0.1,
+    #         "y": 0.1,
+    #         "z": 0.1,
+    #     }
+    # }
+
+    # Check if nofix
+    if current.mode < 2:
+        return {"lat": 0, "lon": 0, "speed": 0, "heading": 0,
+                "mode": current.mode, time: current.time}
+
+    return {
+        "lat": current.lat,
+        "lon": current.lon,
+        "speed": current.hspeed,
+        "heading": current.track,
+        "mode": current.mode,
+        "time": current.time,
+        "error": current.error
+    }
+
+
+@socketio.on("gps")
+def handle_gps():
+    gps_data = get_gps_data()
+    print(gps_data)
+    return gps_data
 
 
 if __name__ == "__main__":
