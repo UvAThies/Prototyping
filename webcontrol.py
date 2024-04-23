@@ -85,7 +85,7 @@ def get_gps_data():
     # Check if nofix
     if current.mode < 2:
         return {"lat": 0, "lon": 0, "speed": 0, "heading": 0,
-                "mode": current.mode, time: current.time}
+                "mode": current.mode, "time": current.time}
 
     return {
         "lat": current.lat,
