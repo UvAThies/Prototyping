@@ -173,21 +173,19 @@ class MotorControl:
 
 class ServoControl:
     def __init__(self):
-        # self.servoPIN = 14
-        # GPIO.setmode(GPIO.BCM)
-        # GPIO.setup(self.servoPIN, GPIO.OUT)
-        # self.servo = GPIO.PWM(self.servoPIN, 50)
-        # self.servo.start(7.5)
-        return
+        self.servoPIN = 14
+        GPIO.setmode(GPIO.BCM)
+        GPIO.setup(self.servoPIN, GPIO.OUT)
+        self.servo = GPIO.PWM(self.servoPIN, 50)
+        self.servo.start(7.5)
+        self.servo.ChangeDutyCycle(0)
 
     def move(self, servo_x):
         # map angle from -1 1 to 2.5-12.5
-        # duty = servo_x * -5 + 7.5
-        # self.servo.ChangeDutyCycle(duty)
-        return
+        duty = servo_x * -5 + 7.5
+        self.servo.ChangeDutyCycle(duty)
 
     def stop(self):
-        # print("Stopping servo")  # tijdelijk
-        # self.servo.ChangeDutyCycle(0)
-        # # self.servo.stop()
-        return
+        print("Stopping servo")  # tijdelijk
+        self.servo.ChangeDutyCycle(0)
+        # self.servo.stop()
