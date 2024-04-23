@@ -31,8 +31,8 @@ class MotorControl:
 
         self.motor_1_PWM = GPIO.PWM(PWMA, 50)
         self.motor_2_PWM = GPIO.PWM(PWMB, 50)
-        # self.motor_1_PWM.start(100)
-        # self.motor_2_PWM.start(100)
+        self.motor_1_PWM.start(100)
+        self.motor_2_PWM.start(100)
 
     def play_sound(self):
         print("Playing sound")
@@ -173,18 +173,21 @@ class MotorControl:
 
 class ServoControl:
     def __init__(self):
-        self.servoPIN = 14
-        GPIO.setmode(GPIO.BCM)
-        GPIO.setup(self.servoPIN, GPIO.OUT)
-        self.servo = GPIO.PWM(self.servoPIN, 50)
-        self.servo.start(7.5)
+        # self.servoPIN = 14
+        # GPIO.setmode(GPIO.BCM)
+        # GPIO.setup(self.servoPIN, GPIO.OUT)
+        # self.servo = GPIO.PWM(self.servoPIN, 50)
+        # self.servo.start(7.5)
+        return
 
     def move(self, servo_x):
         # map angle from -1 1 to 2.5-12.5
-        duty = servo_x * -5 + 7.5
-        self.servo.ChangeDutyCycle(duty)
+        # duty = servo_x * -5 + 7.5
+        # self.servo.ChangeDutyCycle(duty)
+        return
 
     def stop(self):
-        print("Stopping servo")  # tijdelijk
-        self.servo.ChangeDutyCycle(0)
-        # self.servo.stop()
+        # print("Stopping servo")  # tijdelijk
+        # self.servo.ChangeDutyCycle(0)
+        # # self.servo.stop()
+        return
