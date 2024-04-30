@@ -55,16 +55,10 @@ class MotorControl:
         GPIO.output(self.M3, B1)
         GPIO.output(self.M4, B2)
 
-    def forward(self):
-        self.set_motor(1, 0, 0, 1)
-
     def stop(self):
         self.set_motor(0, 0, 0, 0)
 
-    def reverse(self):
-        self.set_motor(0, 1, 1, 0)
-
-    def set_motor_new(self, left_dir, right_dir):
+    def set_motor(self, left_dir, right_dir):
         if left_dir == 1 and right_dir == 1:
             # both forwards
             self.set_motor(1, 0, 0, 1)
@@ -75,63 +69,17 @@ class MotorControl:
 
         if left_dir == 1 and right_dir == -1:
             # left forward, right backward
-            self.set_motor(1, 0, 1, 0)  # wellicht omkeren
-
+            self.set_motor(1, 0, 1, 0)
+            
         if left_dir == -1 and right_dir == 1:
             # left backward, right forward
-            self.set_motor(0, 1, 0, 1)  # wellicht omkeren
+            self.set_motor(0, 1, 0, 1)
 
         if left_dir == 0 and right_dir == 0:
             # both stop
             self.set_motor(0, 0, 0, 0)
 
-    # motor instructions, expects values:
-    # Trigger_inp: waarde tussen -1 en 1 die aangeeft hoeveel gas wordt gegeven. 1=vol gas vooruit, -1=vol gas achteruit, 0=neutraal
-    # Joy_inp: waarde tussen 0 en 255 die aangeeft hoeveel naar links of rechts wordt gestuurd. 0=volledig naar links, 255=volledig naar rechts, 127=neutraal
-    def motor_instructions(self, trigger_inp, joy_inp):
-        # Steer_value: waarde tussen 0 en 100 die aangeeft hoeveel naar links of rechts wordt gestuurd. 100=rechts, 0=links, 50=niet sturen
-        steer_value = joy_inp * 100 / 255
-
-        # Neutral steering;
-        if abs(trigger_inp) * 100 <= 1:
-            if steer_value - 50 >= 2:
-                self.motor_1_PWM.ChangeDutyCycle(abs(steer_value - 50))
-                self.motor_2_PWM.ChangeDutyCycle(abs(steer_value - 50))
-                self.set_motor(1, 0, 1, 0)
-            elif steer_value - 50 <= -2:
-                self.motor_1_PWM.ChangeDutyCycle(abs(steer_value - 50))
-                self.motor_2_PWM.ChangeDutyCycle(abs(steer_value - 50))
-                self.set_motor(0, 1, 0, 1)
-            else:
-                self.stop()
-        else:
-            voor_achter = trigger_inp / abs(trigger_inp)  # 1: vooruit, -1: achteruit
-
-            # Override voor meetfouten
-            if steer_value < 0:
-                steer_value = 0
-            elif steer_value > 100:
-                steer_value = 100
-
-            steer_value_1 = steer_value
-            steer_value_2 = 100 - steer_value
-            steer_max = max(steer_value_1, steer_value_2)
-            steer_value_1_scaled = steer_value_1 / steer_max * 100 * abs(trigger_inp)
-            steer_value_2_scaled = steer_value_2 / steer_max * 100 * abs(trigger_inp)
-            print("trigger_inp:{}".format(trigger_inp))
-            print("steer_value:{}".format(steer_value))
-            print("dutycycle_motor_1:{}".format(steer_value_1_scaled))
-            print("dutycycle_motor_2:{}".format(steer_value_2_scaled))
-            if voor_achter == 1:  # Gas vooruit en sturen
-                self.motor_1_PWM.ChangeDutyCycle(steer_value_2_scaled)
-                self.motor_2_PWM.ChangeDutyCycle(steer_value_1_scaled)
-                self.forward()
-            elif voor_achter == -1:  # Gas achteruit en sturen
-                self.motor_1_PWM.ChangeDutyCycle(steer_value_2_scaled)
-                self.motor_2_PWM.ChangeDutyCycle(steer_value_1_scaled)
-                self.reverse()
-
-    def motor_instructions_new(self, joy_x, joy_y):
+    def motor_instructions(self, joy_x, joy_y):
 
         # opposite track movement on steering, scaled
         left_track = (joy_x + joy_y * 0.5) * 100 / 2**0.5
@@ -153,7 +101,7 @@ class MotorControl:
 
         left_speed = abs(left_track)
         right_speed = abs(right_track)
-        self.set_motor_new(left_dir, right_dir)
+        self.set_motor(left_dir, right_dir)
 
         if (
             left_speed <= 100
@@ -184,7 +132,7 @@ class ServoControl:
         self.servo.ChangeDutyCycle(0)
 
     def move(self, servo_x):
-        # map angle from -1 1 to 2.5-12.5
+        # map angle from -1,1 to 2.5,12.5
         duty = servo_x * -5 + 7.5
         self.servo.ChangeDutyCycle(duty)
 

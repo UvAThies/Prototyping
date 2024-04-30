@@ -43,7 +43,7 @@ def handle_req(data):
 
         # print(f"Received request: joy_x={joy_x}, joy_y={joy_y}")
         # emit("rsp", {"status": "OK"})
-        controller.motor_instructions_new(joy_y, joy_x)
+        controller.motor_instructions(joy_y, joy_x)
 
 
 @socketio.on("servo")
