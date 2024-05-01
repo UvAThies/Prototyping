@@ -1,14 +1,15 @@
 # Tijn Schuitevoerder 2024
 
-import sys
 from flask import Flask, render_template
 from flask_socketio import SocketIO, emit
 
-from controls import MotorControl, ServoControl
-from gps import GPS
-# from controls_sim import MotorControl, ServoControl
+# from controls import MotorControl, ServoControl
+# from gps import GPS
+from gps_sim import GPS
+from controls_sim import MotorControl, ServoControl
 
 
+GPS_device = GPS()
 controller = MotorControl()
 servo_controller = ServoControl()
 controller.setup_sig_handler()
@@ -67,7 +68,7 @@ def handle_disconnect():
 
 @socketio.on("gps")
 def handle_gps():
-    gps_data = GPS.get_gps_data()
+    gps_data = GPS_device.get_gps_data()
     return gps_data
 
 

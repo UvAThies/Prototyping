@@ -9,6 +9,9 @@ import sys
 
 class MotorControl:
     def __init__(self):
+        """Connect to the motor controller board and set up the GPIO pins. 
+        """       
+
         PIN = 18
         self.M1 = 6
         self.M2 = 13
@@ -36,6 +39,9 @@ class MotorControl:
         self.motor_2_PWM.start(100)
 
     def play_sound(self):
+        """Play a sound when called.
+        """        
+
         print("Playing sound")
         playsound("./sounds/horn.mp3")
 
@@ -46,7 +52,16 @@ class MotorControl:
     # https://www.waveshare.com/wiki/RPi_Motor_Driver_Board
     # Motor A: PWA1, PWA2.
     # Motor B: PWB1, PWB2.
-    def set_motor(self, A1, A2, B1, B2):
+    def set_motor_pins(self, A1: bool, A2: bool, B1: bool, B2: bool):
+        """Set the pins of motor A and B.
+
+        Args:
+            A1 (bool): Motor A, forward.
+            A2 (bool): Motor A, backward.
+            B1 (bool): Motor B, backward.
+            B2 (bool): Motor B, forward.
+        """
+
         assert A1 != A2 or (A1 == 0 and A2 == 0)
         assert B1 != B2 or (B1 == 0 and B2 == 0)
 
@@ -55,31 +70,47 @@ class MotorControl:
         GPIO.output(self.M3, B1)
         GPIO.output(self.M4, B2)
 
-    def stop(self):
-        self.set_motor(0, 0, 0, 0)
+        
+    def set_motor_dir(self, left_dir: int, right_dir: int):
+        """Set the directions of motor A and B.
 
-    def set_motor(self, left_dir, right_dir):
+        Args:
+            left_dir (int): 1 for forward, -1 for backward, 0 for stop.
+            right_dir (int): 1 for forward, -1 for backward, 0 for stop.
+        """        
+
         if left_dir == 1 and right_dir == 1:
             # both forwards
-            self.set_motor(1, 0, 0, 1)
+            self.set_motor_pins(1, 0, 0, 1)
 
         if left_dir == -1 and right_dir == -1:
             # both backwards
-            self.set_motor(0, 1, 1, 0)
+            self.set_motor_pins(0, 1, 1, 0)
 
         if left_dir == 1 and right_dir == -1:
             # left forward, right backward
-            self.set_motor(1, 0, 1, 0)
+            self.set_motor_pins(1, 0, 1, 0)
             
         if left_dir == -1 and right_dir == 1:
             # left backward, right forward
-            self.set_motor(0, 1, 0, 1)
+            self.set_motor_pins(0, 1, 0, 1)
 
         if left_dir == 0 and right_dir == 0:
             # both stop
-            self.set_motor(0, 0, 0, 0)
+            self.set_motor_pins(0, 0, 0, 0)
 
-    def motor_instructions(self, joy_x, joy_y):
+    def stop(self):
+        """Stop both motors.
+        """
+        self.set_motor_dir(0, 0)
+
+    def motor_instructions(self, joy_x: float, joy_y: float):
+        """Set the motor directions and speeds based on joystick input.
+
+        Args:
+            joy_x (float): ranges from -1 to 1 from left to right.
+            joy_y (float): ranges from -1 to 1 from down to up.
+        """        
 
         # opposite track movement on steering, scaled
         left_track = (joy_x + joy_y * 0.5) * 100 / 2**0.5
@@ -101,7 +132,7 @@ class MotorControl:
 
         left_speed = abs(left_track)
         right_speed = abs(right_track)
-        self.set_motor(left_dir, right_dir)
+        self.set_motor_dir(left_dir, right_dir)
 
         if (
             left_speed <= 100
@@ -113,17 +144,23 @@ class MotorControl:
             self.motor_2_PWM.ChangeDutyCycle(right_speed)
 
     def signal_handler(self, sig, frame):
+        """Handle the signals from the OS.
+        """
         self.stop()
         GPIO.cleanup()
         sys.exit(0)
 
     def setup_sig_handler(self):
+        """Set up the signal handler for the OS.
+        """
         signal.signal(signal.SIGINT, self.signal_handler)
         signal.signal(signal.SIGTERM, self.signal_handler)
 
 
 class ServoControl:
     def __init__(self):
+        """Set up the necessary GPIO pins and initialize the servo motor.
+        """
         self.servoPIN = 14
         GPIO.setmode(GPIO.BCM)
         GPIO.setup(self.servoPIN, GPIO.OUT)
@@ -132,11 +169,15 @@ class ServoControl:
         self.servo.ChangeDutyCycle(0)
 
     def move(self, servo_x):
+        """Move the servo motor based on the joystick input.
+        """
         # map angle from -1,1 to 2.5,12.5
         duty = servo_x * -5 + 7.5
         self.servo.ChangeDutyCycle(duty)
 
     def stop(self):
+        """Stop the servo motor.
+        """
         print("Stopping servo")  # tijdelijk
         self.servo.ChangeDutyCycle(0)
         # self.servo.stop()
