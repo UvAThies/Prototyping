@@ -3,10 +3,10 @@
 from flask import Flask, render_template
 from flask_socketio import SocketIO, emit
 
-# from controls import MotorControl, ServoControl
-# from gps import GPS
-from gps_sim import GPS
-from controls_sim import MotorControl, ServoControl
+from controls import MotorControl, ServoControl
+from gps import GPS
+# from gps_sim import GPS
+# from controls_sim import MotorControl, ServoControl
 
 
 GPS_device = GPS()
