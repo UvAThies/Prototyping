@@ -6,7 +6,7 @@ class GPS:
         """        
         gpsd.connect()
 
-    def get_gps_data():
+    def get_gps_data(self):
         """
         Retrieves GPS data from the connected GPS device.
 
